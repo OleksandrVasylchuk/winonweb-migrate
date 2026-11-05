@@ -4,7 +4,7 @@ Tags: migration, backup, migrate, clone, restore
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.4.2
+Stable tag: 0.4.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,9 @@ No. Archives stay on your server unless you download them. The plugin does not c
 5. Tools: find and replace leftover links after a migration.
 
 == Changelog ==
+
+= 0.4.3 =
+* New logo and colors in the plugin screen.
 
 = 0.4.2 =
 * Files unpacked from an archive are staged as numbered files without an extension or folder structure and only get their real name when moved into place, so a PHP file from an archive is never reachable under its own name while an import runs.

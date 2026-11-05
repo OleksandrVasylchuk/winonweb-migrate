@@ -20,7 +20,7 @@ $wowm_home = untrailingslashit((string) get_option('home'));
   <header class="wowm-hero">
     <div class="wowm-hero__brand">
       <span class="wowm-logo" aria-hidden="true">
-        <svg viewBox="0 0 32 32" width="32" height="32"><path d="M6 9l4.2 14L16 12l5.8 11L26 9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 256 256" width="46" height="46"><path fill="#fff" d="M33.1 131.3A95.0 95.0 0 0 1 183.8 51.1L196.2 34.2L210.6 89.1L153.9 92.4L166.2 75.4A65.0 65.0 0 0 0 63.0 130.3Z"/><path fill="#22d3ee" d="M222.9 124.7A95.0 95.0 0 0 1 72.2 204.9L59.8 221.8L45.4 166.9L102.1 163.6L89.8 180.6A65.0 65.0 0 0 0 193.0 125.7Z"/><circle cx="128" cy="128" r="23" fill="#22d3ee"/></svg>
       </span>
       <div>
         <p class="wowm-hero__title"><?php esc_html_e('WinOnWeb Migrate', 'winonweb-migrate'); ?></p>

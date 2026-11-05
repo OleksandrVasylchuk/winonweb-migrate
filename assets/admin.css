@@ -7,9 +7,11 @@
   --wowm-line: #e2e8f0;
   --wowm-soft: #f8fafc;
   --wowm-card: #ffffff;
-  --wowm-brand: #4f46e5;
-  --wowm-brand-2: #7c3aed;
-  --wowm-brand-soft: #eef2ff;
+  --wowm-brand: #0891b2;
+  --wowm-accent: #22d3ee;
+  --wowm-night: #0b1120;
+  --wowm-brand-2: #0e7490;
+  --wowm-brand-soft: #ecfeff;
   --wowm-success: #059669;
   --wowm-success-soft: #ecfdf5;
   --wowm-warning: #b45309;
@@ -70,10 +72,10 @@
   padding: 22px 26px;
   border-radius: var(--wowm-radius);
   background:
-    radial-gradient(120% 140% at 0% 0%, rgba(255, 255, 255, 0.18), transparent 55%),
-    linear-gradient(120deg, var(--wowm-brand) 0%, var(--wowm-brand-2) 100%);
+    radial-gradient(120% 140% at 0% 0%, rgba(34, 211, 238, 0.14), transparent 55%),
+    var(--wowm-night);
   color: #fff;
-  box-shadow: 0 18px 40px -24px rgba(79, 70, 229, 0.8);
+  box-shadow: 0 18px 40px -24px rgba(8, 145, 178, 0.8);
 }
 
 .wowm-hero__brand {
@@ -88,8 +90,6 @@
   width: 46px;
   height: 46px;
   border-radius: 13px;
-  background: rgba(255, 255, 255, 0.16);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
   color: #fff;
 }
 
@@ -269,7 +269,7 @@
 }
 
 .wowm-tile:hover {
-  border-color: #c7d2fe;
+  border-color: #a5f3fc;
   transform: translateY(-1px);
 }
 
@@ -431,7 +431,7 @@
 }
 
 .wowm-folder.is-off:hover {
-  border-color: #c7d2fe;
+  border-color: #a5f3fc;
   background: var(--wowm-brand-soft);
   opacity: 1;
 }
@@ -681,14 +681,14 @@
 .wowm .wowm-btn--primary,
 .wowm .wowm-btn--primary:focus,
 .wowm .wowm-btn--primary:active {
-  background: linear-gradient(120deg, var(--wowm-brand), var(--wowm-brand-2));
-  color: #fff;
-  box-shadow: 0 8px 20px -10px rgba(79, 70, 229, 0.9);
+  background: var(--wowm-accent);
+  color: var(--wowm-night);
+  box-shadow: 0 8px 20px -10px rgba(8, 145, 178, 0.9);
 }
 
 .wowm .wowm-btn--primary:hover:not([disabled]) {
-  color: #fff;
-  box-shadow: 0 12px 24px -10px rgba(79, 70, 229, 0.95);
+  color: var(--wowm-night);
+  box-shadow: 0 12px 24px -10px rgba(8, 145, 178, 0.95);
 }
 
 .wowm .wowm-btn--danger,
@@ -795,9 +795,9 @@
 .wowm-drop {
   margin: 26px 26px 14px;
   padding: 48px 24px;
-  border: 2px dashed #c7d2fe;
+  border: 2px dashed #a5f3fc;
   border-radius: var(--wowm-radius);
-  background: linear-gradient(180deg, #fafaff, #fff);
+  background: linear-gradient(180deg, #f0fdff, #fff);
   text-align: center;
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s, transform 0.2s var(--wowm-ease);
@@ -828,7 +828,7 @@
   border-radius: 18px;
   background: #fff;
   color: var(--wowm-brand);
-  box-shadow: 0 10px 24px -14px rgba(79, 70, 229, 0.7);
+  box-shadow: 0 10px 24px -14px rgba(8, 145, 178, 0.7);
 }
 
 .wowm-drop__title {
@@ -864,7 +864,7 @@
   inset: 0 auto 0 0;
   width: 0;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--wowm-brand), var(--wowm-brand-2));
+  background: linear-gradient(90deg, var(--wowm-brand), var(--wowm-accent));
   transition: width 0.3s var(--wowm-ease);
 }
 
@@ -919,7 +919,7 @@
 }
 
 .wowm-site--to {
-  border-color: #c7d2fe;
+  border-color: #a5f3fc;
   background: var(--wowm-brand-soft);
 }
 
@@ -951,8 +951,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(120deg, var(--wowm-brand), var(--wowm-brand-2));
-  color: #fff;
+  background: var(--wowm-accent);
+  color: var(--wowm-night);
 }
 
 .wowm-facts {
@@ -1244,7 +1244,7 @@
 
 .wowm-empty .wowm-icon {
   margin: 0 auto 10px;
-  color: #c7d2fe;
+  color: #a5f3fc;
 }
 
 /* Modal */
@@ -1705,7 +1705,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #f5f3ff;
+  background: #ecfeff;
   color: var(--wowm-brand-2);
 }
 
@@ -1833,8 +1833,8 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: linear-gradient(120deg, var(--wowm-brand), var(--wowm-brand-2));
-  color: #fff;
+  background: var(--wowm-accent);
+  color: var(--wowm-night);
   font-weight: 700;
 }
 
@@ -1924,7 +1924,7 @@
   padding: 26px;
   border-radius: var(--wowm-radius);
   background:
-    radial-gradient(120% 140% at 100% 0%, rgba(124, 58, 237, 0.35), transparent 60%),
+    radial-gradient(120% 140% at 100% 0%, rgba(34, 211, 238, 0.18), transparent 60%),
     #0f172a;
   color: #cbd5e1;
 }
