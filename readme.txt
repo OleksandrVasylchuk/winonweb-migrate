@@ -4,7 +4,7 @@ Tags: migration, backup, migrate, clone, restore
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.4.3
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,9 @@ No. Archives stay on your server unless you download them. The plugin does not c
 5. Tools: find and replace leftover links after a migration.
 
 == Changelog ==
+
+= 1.0.0 =
+* First stable release.
 
 = 0.4.3 =
 * New logo and colors in the plugin screen.
