@@ -483,6 +483,13 @@
     }
   });
 
+  $('[data-log-tables]').addEventListener('click', (e) => {
+    e.preventDefault();
+    const field = $('[data-opt="exclude_tables"]');
+    const lines = field.value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+    field.value = [...new Set([...lines, ...C.logTables])].join('\n');
+  });
+
   excludesField.addEventListener('input', () => {
     renderFolders();
     updateEstimate();
@@ -552,6 +559,7 @@
     const options = {
       components: selectedComponents(),
       excludes: $('[data-opt="excludes"]').value,
+      exclude_tables: $('[data-opt="exclude_tables"]').value,
       replace: readPairs($('[data-pairs="export"]')),
     };
 

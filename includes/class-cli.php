@@ -21,14 +21,23 @@ final class Cli {
    * [--exclude=<patterns>]
    * : Comma separated exclusion patterns ("/x" anchored to wp-content).
    *
+   * [--exclude-tables=<patterns>]
+   * : Comma separated table patterns whose rows are skipped (structure is kept), with or without the prefix, e.g. "*_mails,wsal_*".
+   *
+   * [--skip-logs]
+   * : Skip the rows of known log and queue tables (mail logs, activity logs, Action Scheduler logs...).
+   *
    * [--keep-transients]
    * : Export transients too.
    *
    * ## EXAMPLES
    *
    *     wp wowm export --skip=uploads
+   *     wp wowm export --skip-logs --exclude-tables=taxjar_record_queue
    */
   public function export($args, $assoc) {
+    $this->ensure_idle();
+
     $components = Export_Job::DEFAULTS['components'];
 
     foreach (array_filter(explode(',', $assoc['skip'] ?? '')) as $skip) {
@@ -40,6 +49,7 @@ final class Cli {
       Export_Job::sanitize([
         'components' => $components,
         'excludes' => explode(',', $assoc['exclude'] ?? ''),
+        'exclude_tables' => array_merge(explode(',', $assoc['exclude-tables'] ?? ''), empty($assoc['skip-logs']) ? [] : Db_Exporter::LOG_TABLES),
         'exclude_transients' => empty($assoc['keep-transients']),
         'exclude_spam' => true,
         'exclude_dropins' => true,
@@ -112,6 +122,7 @@ final class Cli {
       \WP_CLI::error('The archive cannot be imported.');
     }
 
+    $this->ensure_idle();
     \WP_CLI::confirm(sprintf('Overwrite %s with %s?', $info['target']['home'], $info['source']['home']), $assoc);
 
     $job = Job::create(
@@ -169,6 +180,14 @@ final class Cli {
   public function keep($args, $assoc) {
     Rollback::clear();
     \WP_CLI::success('The previous database was removed.');
+  }
+
+  private function ensure_idle(): void {
+    $active = Scheduler::active();
+
+    if ($active) {
+      \WP_CLI::error(sprintf('Another job (%s, started %s) is still running. Wait for it or cancel it in the admin screen first.', $active['type'], wp_date('Y-m-d H:i', $active['started'])));
+    }
   }
 
   private function drive(Job $job, string $label): array {

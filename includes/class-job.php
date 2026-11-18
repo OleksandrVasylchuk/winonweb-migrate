@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
  */
 abstract class Job {
   const CHUNK = 1048576;
+  const OPEN_TRIES = 10;
+  const OPEN_WAIT = 250000; // microseconds
 
   public $id;
   public $state;
@@ -175,13 +177,38 @@ abstract class Job {
   }
 
   public function cancel(): array {
-    if ($this->state['status'] === 'running' && $this->cancellable()) {
-      touch($this->dir() . '/cancel');
-
-      return $this->tick(0.01);
+    if ($this->state['status'] !== 'running' || !$this->cancellable()) {
+      return $this->status();
     }
 
-    return $this->status();
+    touch($this->dir() . '/cancel');
+
+    // A tick holding the lock only looks at the flag between steps. Wait for it to
+    // let go and finish the job here, so cancelling never depends on another tick
+    // (closed tab, WP-Cron off) coming along later.
+    $max = (int) ini_get('max_execution_time');
+    $until = microtime(true) + ($max > 0 ? max(1, min(30, $max - 5)) : 30);
+
+    do {
+      $status = $this->tick(0.01);
+
+      if (empty($status['busy'])) {
+        return $status;
+      }
+
+      usleep(500000);
+      $this->reload();
+    } while (microtime(true) < $until);
+
+    return $status;
+  }
+
+  private function reload(): void {
+    $fresh = self::load($this->id);
+
+    if ($fresh) {
+      $this->state = $fresh->state;
+    }
   }
 
   private function finish(string $status): void {
@@ -273,15 +300,41 @@ abstract class Job {
    * @return resource
    */
   public static function open_at(string $path, int $pos) {
-    $fh = fopen($path, 'cb');
+    // Some hosts' file scanners refuse a brand-new file for a moment ("Permission
+    // denied" on the first try, fine right after): retry briefly before giving up.
+    for ($try = 0; $try < self::OPEN_TRIES; $try++) {
+      error_clear_last();
+      $fh = @fopen($path, 'cb');
 
-    if (!$fh) {
-      throw new \RuntimeException(esc_html(sprintf(/* translators: %s: file path */ __('Could not write %s', 'winonweb-migrate'), $path)));
+      if ($fh) {
+        break;
+      }
+
+      usleep(self::OPEN_WAIT);
     }
 
-    ftruncate($fh, $pos);
-    fseek($fh, 0, SEEK_END);
+    if (!$fh) {
+      throw new \RuntimeException(esc_html(sprintf(/* translators: %s: file path */ __('Could not write %s', 'winonweb-migrate'), $path) . self::reason()));
+    }
+
+    error_clear_last();
+
+    if (!ftruncate($fh, $pos) || fseek($fh, 0, SEEK_END) !== 0) {
+      fclose($fh);
+      throw new \RuntimeException(esc_html(sprintf(/* translators: %s: file path */ __('Could not write %s', 'winonweb-migrate'), $path) . self::reason()));
+    }
 
     return $fh;
+  }
+
+  /**
+   * PHP's own explanation of the last failed file call, e.g. " (Permission denied)".
+   */
+  public static function reason(): string {
+    $message = (string) (error_get_last()['message'] ?? '');
+    // "fopen(D:\x\y): Failed to open stream: Permission denied" -> "Permission denied"
+    $message = trim((string) preg_replace(['/^.*failed to open stream:\s*/i', '/^\w+\(.*\):\s*/'], '', $message));
+
+    return $message !== '' ? ' (' . $message . ')' : '';
   }
 }

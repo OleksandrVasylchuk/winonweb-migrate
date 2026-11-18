@@ -82,6 +82,11 @@ $wowm_home = untrailingslashit((string) get_option('home'));
             <label class="wowm-switch"><input type="checkbox" data-opt="exclude_transients" checked><span class="wowm-switch__track"></span><span><?php esc_html_e('Skip transients (temporary cache in the database)', 'winonweb-migrate'); ?></span></label>
             <label class="wowm-switch"><input type="checkbox" data-opt="exclude_spam" checked><span class="wowm-switch__track"></span><span><?php esc_html_e('Skip spam comments', 'winonweb-migrate'); ?></span></label>
             <label class="wowm-switch"><input type="checkbox" data-opt="exclude_revisions"><span class="wowm-switch__track"></span><span><?php esc_html_e('Skip post revisions', 'winonweb-migrate'); ?></span></label>
+            <label class="wowm-field">
+              <span><?php esc_html_e('Skip table data', 'winonweb-migrate'); ?></span>
+              <textarea rows="3" data-opt="exclude_tables" spellcheck="false" placeholder="*_mails&#10;wsal_*"></textarea>
+              <small><?php esc_html_e('One pattern per line, with or without the table prefix. The tables are kept empty, so plugins on the copy still find them.', 'winonweb-migrate'); ?> <button type="button" class="button-link" data-log-tables><?php esc_html_e('Add log and queue tables', 'winonweb-migrate'); ?></button></small>
+            </label>
           </fieldset>
 
           <fieldset class="wowm-fieldset">

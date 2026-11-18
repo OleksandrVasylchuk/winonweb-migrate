@@ -4,7 +4,7 @@ Tags: migration, backup, migrate, clone, restore
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,13 @@ No. Archives stay on your server unless you download them. The plugin does not c
 5. Tools: find and replace leftover links after a migration.
 
 == Changelog ==
+
+= 1.0.1 =
+* Hosts whose file scanner briefly locks brand-new files no longer fail with "Could not write": the file is retried for a few seconds, and the error now says why PHP refused it.
+* Faster database export: rows per query follow each table's average row size (500-5000 instead of a fixed 500) and each batch is written in one go.
+* New "Skip table data" option (and `--exclude-tables` / `--skip-logs` in WP-CLI) for mail logs, activity logs and queues. The tables are kept empty on the copy.
+* Cancel always stops the job, even when the tab is closed or WP-Cron is off.
+* Only one export or import runs at a time.
 
 = 1.0.0 =
 * First stable release.

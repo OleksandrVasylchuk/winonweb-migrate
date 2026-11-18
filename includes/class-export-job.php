@@ -14,6 +14,7 @@ final class Export_Job extends Job {
     'exclude_revisions' => false,
     'exclude_dropins' => true,
     'excludes' => [],
+    'exclude_tables' => [],
     'replace' => [],
     'origin' => 'manual',
     'label' => '',
@@ -33,6 +34,10 @@ final class Export_Job extends Job {
 
     $excludes = is_array($in['excludes'] ?? null) ? $in['excludes'] : preg_split('/\R/', (string) ($in['excludes'] ?? ''));
     $out['excludes'] = array_slice(array_values(array_filter(array_map('trim', $excludes))), 0, 200);
+    $tables = is_array($in['exclude_tables'] ?? null) ? $in['exclude_tables'] : preg_split('/[\s,]+/', (string) ($in['exclude_tables'] ?? ''));
+    $out['exclude_tables'] = array_slice(array_values(array_unique(array_filter(array_map(function ($p) {
+      return preg_replace('/[^A-Za-z0-9_*?\[\]-]/', '', (string) $p);
+    }, $tables)))), 0, 100);
     $out['replace'] = self::sanitize_pairs($in['replace'] ?? []);
     $out['origin'] = in_array($in['origin'] ?? '', ['manual', 'scheduled', 'pre-import', 'cli'], true) ? $in['origin'] : 'manual';
     $out['label'] = sanitize_text_field($in['label'] ?? '');
@@ -305,7 +310,7 @@ final class Export_Job extends Job {
       'entries' => $d['entries'],
       'site' => $site,
       'components' => $components,
-      'options' => array_intersect_key($this->state['options'], array_flip(['exclude_transients', 'exclude_spam', 'exclude_revisions', 'exclude_dropins', 'excludes'])),
+      'options' => array_intersect_key($this->state['options'], array_flip(['exclude_transients', 'exclude_spam', 'exclude_revisions', 'exclude_dropins', 'excludes', 'exclude_tables'])),
       'replace' => $this->opt('replace', []),
       'stats' => [
         'files' => $d['files_done'],

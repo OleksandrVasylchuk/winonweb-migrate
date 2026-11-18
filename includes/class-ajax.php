@@ -70,6 +70,18 @@ final class Ajax {
     return $job;
   }
 
+  /**
+   * One job at a time: two exports (or an export next to an import) only slow
+   * each other down and fight over the same files.
+   */
+  private static function ensure_idle(): void {
+    $active = Scheduler::active();
+
+    if ($active) {
+      wp_send_json_error(['message' => __('Another job is still running. Wait for it to finish or cancel it first.', 'winonweb-migrate')], 409);
+    }
+  }
+
   private static function started(Job $job): void {
     Scheduler::watch($job, self::text('title'));
     wp_send_json_success(['job' => $job->id, 'secret' => $job->secret()] + $job->status());
@@ -77,11 +89,13 @@ final class Ajax {
 
   public static function export_start(): void {
     self::guard();
+    self::ensure_idle();
     self::started(Job::create('export', Export_Job::sanitize(self::input('options'))));
   }
 
   public static function import_start(): void {
     self::guard();
+    self::ensure_idle();
     $options = Import_Job::sanitize(self::input('options'));
 
     if (!Storage::path($options['file'])) {
